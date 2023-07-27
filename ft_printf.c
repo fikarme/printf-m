@@ -6,7 +6,7 @@
 /*   By: akdemir <akdemir@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/15 21:38:25 by akdemir           #+#    #+#             */
-/*   Updated: 2023/07/26 18:01:15 by akdemir          ###   ########.fr       */
+/*   Updated: 2023/07/27 17:53:14 by akdemir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ int	ft_putc(char c)
 	return (1);
 }
 
-int	type(char c, va_list lst)
+int	ft_type(char c, va_list lst)
 {
 	int	l;
 
 	l = 0;
-	if (c == 'c') 
+	if (c == '%')
+		l += ft_putc('%');
+	else if (c == 'c') 
 		l += ft_putc(va_arg(lst, int));
 	else if (c == 's') 
 		l += ft_puts(va_arg(lst, char *)); 
@@ -31,8 +33,6 @@ int	type(char c, va_list lst)
 		l += ft_putp(va_arg(lst, void *));
 	else if (c == 'd') 
 		l += ft_putn(va_arg(lst, int));
-		// byte sfırsa akifi sil
-  //it looks at the int(four bytes) in   that stack after *str
 	else if (c == 'i') 
 		l += ft_putn(va_arg(lst, int));
 	else if (c == 'u') 
@@ -41,26 +41,23 @@ int	type(char c, va_list lst)
 		l += ft_puth(va_arg(lst, unsigned int), "0123456789abcdef");
 	else if (c == 'X')
 		l += ft_puth(va_arg(lst, unsigned int), "0123456789ABCDEF");
-	else if (c == '%')
-		l += ft_putc('%');
-	else if	(c == '#')
-		l += ft_puthash(
 	return (l);
 }
+
 int	ft_printf(const char *str, ...)
 {
-	va_list	lst;//argümanları saklıyor
+	va_list	lst;
 	int		l;
 	int		i;
 
 	l = 0;
 	i = 0;
-	va_start(lst, str);//iterated over
+	va_start(lst, str);
 	while (str[i])
 	{
 		if (str[i] == '%')
 		{
-			l += type(str[i + 1], lst);
+			l += ft_type(str[i + 1], lst);
 			i += 2;
 		}
 		else
